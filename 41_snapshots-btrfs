@@ -45,15 +45,15 @@ prefix="/usr"
 exec_prefix="/usr"
 datarootdir="/usr/share"
 sysconfdir="/etc"
-grub_btrfs_config="${sysconfdir}/default/grub-btrfs/config"
+grub_btrfs_config="${sysconfdir}/default/grub-btrfs"
 
 [[ -f "$grub_btrfs_config" ]] && . "$grub_btrfs_config"
 . "$datarootdir/grub/grub-mkconfig_lib"
 . "${sysconfdir}/default/grub"
 
-###################################################
-### Variables in /etc/default/grub-btrfs/config ###
-###################################################
+############################################
+### Variables in /etc/default/grub-btrfs ###
+############################################
 ## Disable Grub-btrfs (default=active)
 grub_btrfs_disable=${GRUB_BTRFS_DISABLE:-"false"}
 [[ "${grub_btrfs_disable}" == "true" ]] && exit 0
@@ -252,7 +252,14 @@ snapshot_list()
 	local entries=()
 	local ids=()
 	local max_entry_length=0
-	for snap in $(btrfs subvolume list -sa "${btrfssubvolsort}" /); do
+	
+	if [ "$GRUB_BTRFS_SUBVOLUME_SORT_BYPATH" == "true" ]; then
+        	command='btrfs subvolume list -sa "${btrfssubvolsort}" / | sort -k 13'
+    	else
+        	command='btrfs subvolume list -sa "${btrfssubvolsort}" /'
+    	fi
+	
+	for snap in $(eval $command); do
 		IFS=$oldIFS
 		snap=($snap)
 		local snap_path_name=${snap[@]:13:${#snap[@]}}
@@ -543,9 +550,10 @@ if [[ "${count_limit_snap}" = "0" || -z "${count_limit_snap}" ]]; then
 fi
 root_grub="$(make_system_path_relative_to_its_root /boot/$grub_directory)"
 # Make a submenu in GRUB (grub.cfg)
+configfile=${GRUB_BTRFS_CONFIG_FILE:-"${root_grub}/grub-btrfs.cfg"}
 cat << EOF
 submenu '${submenuname}' {
-	configfile "${root_grub}/grub-btrfs.cfg"
+	configfile "$configfile"
 }
 EOF
 printf "###### - Grub-btrfs: Snapshot detection ended   - ######\n" >&2 ;

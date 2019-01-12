@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+# GRUB_BTRFS_CONFIG_FILE="${root_grub}/grub-btrfs.cfg"                       # Overrides default install place of submenu
 # GRUB_BTRFS_SUBMENUNAME="Arch Linux snapshots"                              # Name appearing in the Grub menu
 # GRUB_BTRFS_PREFIXENTRY="Snapshot:"                                         # Add a name ahead your snapshots entries in the Grub menu
 # GRUB_BTRFS_DISPLAY_PATH_SNAPSHOT="true"                                    # Show full path snapshot or only name in the Grub menu
 # GRUB_BTRFS_TITLE_FORMAT="p/d/n"                                            # Custom title, shows/hides p"prefix" d"date" n"name" in the Grub menu, separator "/", custom order available
 # GRUB_BTRFS_LIMIT="50"                                                      # Limit the number of snapshots populated in the GRUB menu
 # GRUB_BTRFS_SUBVOLUME_SORT="descending"                                     # Sort the found subvolumes by newest first ("descending") or oldest first ("ascending") and show $GRUB_BTRFS_LIMIT first entries.
+# GRUB_BTRFS_SUBVOLUME_SORT_BYPATH="false"                                   # Sort the found subvolumes by path/name
 # GRUB_BTRFS_SHOW_SNAPSHOTS_FOUND="true"                                     # Show snapshots found during run "grub-mkconfig"
 # GRUB_BTRFS_SHOW_TOTAL_SNAPSHOTS_FOUND="true"                               # Show Total of snapshots found during run "grub-mkconfig"
 # GRUB_BTRFS_NKERNEL=("vmlinuz-linux")                                       # Use only if you have custom kernel name
@@ -17,3 +19,8 @@
 # GRUB_BTRFS_DIRNAME=grub                                                    # Might be grub2 on some systems ex. /boot/grub2/...
 # GRUB_BTRFS_OVERRIDE_BOOT_PARTITION_DETECTION="false"                       # Change to "true" if you have a boot partition in a different subvolume
 # GRUB_BTRFS_MKCONFIG=grub-mkconfig                                          # Might be 'grub2-mkconfig' on some systems
+
+GRUB_BTRFS_CONFIG_FILE="/grub-btrfs.cfg"
+GRUB_BTRFS_SUBMENUNAME="Linux BTRFS Snapshots ..."
+GRUB_BTRFS_SUBVOLUME_SORT="descending"
+GRUB_BTRFS_SUBVOLUME_SORT_BYPATH="true"
